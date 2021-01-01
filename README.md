@@ -6,7 +6,7 @@ Smart plug, with en esp8266, a DS3231 RTC, and a relay
 * RELAY (here : RelayShield for Wemos D1)
    * Load voltage must be >= 240V (here 250V)
    * Amperage must be > load consumption (here 10A)
-   * Control and low power must be 5V.
+   * low power side must be 5V.
    * The pins on the load side (220V) are called RELAY_comm for the common pin, RELAY_toggeled for the pin connected to RELAY_comm when the relay is powred and RELAY_default for the pin connected to RELAY_comm when the relay is not powered.
    * The pins on the control side (5V) are RELAY_control that toggles the relay on(+5V) and off(0V), RELAY_GND for the ground, and RELAY_5V for the 5V power.
    * WARNING : Most shields use D1 as RELAY_control, which is reserved for the RTC, therefore you need a perfboard to correctly wire the relay instead of directly plugging it on top of the Wemos mini.
