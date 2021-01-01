@@ -36,7 +36,7 @@ Smart plug, with en esp8266, a DS3231 RTC, and a relay
 ## LOW POWER
 * from D1mini_D1 to RTC_SCL  (I2C)
 * from D1mini_D2 to RTC_SDA, (I2C)
-* from D1mini_D5 to RELAY_control (0=default, 1=toggeled);
+* from D1mini_D5 to RELAY_control
 * from 220to5_GND to RELAY_GND, D1mini_GND, RTC_GNC
 * from 220to5_+5V to RELAY_VCC, D1mini_5V, RTC_VCC
 
