@@ -11,7 +11,7 @@ Smart plug, with en esp8266, a DS3231 RTC, and a relay
 * 5VRTC (here DS3231 module, 5V)
    * RTC must be 5V
    * RTC must use I2C for communication
-   * RTC must only provide seconds since epoch. Alarm, temperature, memory or calendar are not required.
+   * RTC must only provide seconds since epoch + powerloss detection. Alarm, temperature, memory or calendar are not required.
    * A coin battery is not required as long as time can be synchronized with NTP.
    * Any RTC with a not to crappy arduino library support does the trick with some extra coding and DS3231 works out of the box
 * 220V AC to 5V DC converter (here Hi-Link HLK-5M05)
@@ -26,6 +26,7 @@ Smart plug, with en esp8266, a DS3231 RTC, and a relay
    * The load is controlled trough the relay, that switches on/off its phase
    * The load in NOT protected by the fuse
    * Relay must be chosen accordingly to the load.
+   * WARNING : Here we want the load to be ON when something is wrong (ex unsynchronized RTC), if it's not the case you must patch the code.
 
 
 
