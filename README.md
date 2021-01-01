@@ -4,7 +4,7 @@ Smart plug, with en esp8266, a DS3231 RTC, and a relay
 # Hardware
 * D1mini : Wemos mini D1, with esp8266
 * RELAY (here : RelayShield for Wemos D1)
-   * Voltage must be >= 240V (here 250V)
+   * Load voltage must be >= 240V (here 250V)
    * Amperage must be > load consumption (here 10A)
    * Control and low power must be 5V.
    * The pins on the load side (220V) are called RELAY_comm for the common pin, RELAY_toggeled for the pin connected to RELAY_comm when the relay is powred and RELAY_default for the pin connected to RELAY_comm when the relay is not powered.
