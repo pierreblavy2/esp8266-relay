@@ -1,14 +1,15 @@
 #include "State.hpp"
-#include "FS.h"
+#include "LittleFS.h"    // https://projetsdiy.fr/esp8266-lire-ecrire-modifier-fichier-librairie-littlefs/   
 #include<cctype> //isdigit
 
 
 void State::save(){
-      File f = SPIFFS.open("config", "w");
+      //File f = SPIFFS.open("config", "w");
+      File f = LittleFS.open("config", "w");
       if(f){
         this->save(f);
-        Serial.println("Save state as");
-        this->print();
+        Serial.println("State saved");
+        //this->print();
         f.close();        
       }else{
         Serial.println("ERROR cannot save state");
@@ -17,14 +18,15 @@ void State::save(){
 
 
 void State::load(){
-    File f = SPIFFS.open("config", "r");
+    //File f = SPIFFS.open("config", "r");
+    File f = LittleFS.open("config", "r");
     if(f){
-      Serial.println("load existing configuration");
+      Serial.println("State loaded");
       this->load(f);
-      Serial.println("---loaded as---");
-      this->print();
+      //Serial.println("---loaded as---");
+      //this->print();
     }else{
-      Serial.println("no configuration file, creating default configuration");
+      Serial.println("No configuration file, create default state");
       this->make_default();
     }
     f.close();
@@ -37,6 +39,7 @@ void State::make_default(){
     memset(this, 0, sizeof(State) );
     set_wifi_ssid("MY_SSID");
     set_wifi_pass("MY_PASSWORD");
+    set_ntp("europe.pool.ntp.org");
 }
 
 
@@ -55,8 +58,16 @@ void State::set_wifi_pass(const char*s){
 
 
 
+void State::set_ntp(const char*s){
+  static constexpr size_t n = sizeof(ntp_server)/sizeof(char);
+  strncpy(ntp_server,s, n);
+  ntp_server[n-1]='\0';
+}
     
- 
+String State::str_ntp_mode()const{
+  if(ntp_mode==NTP_ON){return "NTP";}
+  else                {return "Manuel";}
+}
  
 bool State::is_hh(const String &name){
   return name.length()==3
@@ -103,6 +114,21 @@ void State::print()const{
 	Serial.print("h15:");Serial.println(h15); Serial.print("h16:");Serial.println(h16); Serial.print("h17:");Serial.println(h17);
 	Serial.print("h18:");Serial.println(h18); Serial.print("h19:");Serial.println(h19); Serial.print("h20:");Serial.println(h20);
 	Serial.print("h21:");Serial.println(h21); Serial.print("h22:");Serial.println(h22); Serial.print("h23:");Serial.println(h23);
+  
+  Serial.print("ntp_mode:");Serial.println(ntp_mode);
+  Serial.print("ntp:");Serial.println(get_ntp() );
+
+  /*Serial.print("raw ");
+  Serial.print( sizeof(State) );
+  Serial.print("{");
+  const char* x = reinterpret_cast<const char*>(this);
+  String s;
+  for(size_t i = 0; i < sizeof(State); ++i){
+    s+=String(int(x[i])) + " ";
+  }
+  Serial.print(s);
+  Serial.println("}");*/
+ 
 	Serial.println();
 }
 
@@ -110,5 +136,9 @@ void State::print()const{
 
 
 static_assert(std::is_trivial<State>::value, "State::save and State::load implementation expect a trivial class");
-void State::save(fs::File& f){ f.write    (reinterpret_cast<char*>(this), sizeof(State) ); }
+void State::save(fs::File& f){ 
+  f.write    (reinterpret_cast<char*>(this), sizeof(State) );
+
+}
+
 void State::load(fs::File& f){ f.readBytes(reinterpret_cast<char*>(this), sizeof(State) ); }

@@ -85,7 +85,7 @@ class Rtc_ace : public Rtc_pierre{
 
   //Local timezone
   void             set_tz(const TimeZone &tz){tz_local=tz;}
-  const  TimeZone &set_tz()const             {return tz_local;}
+  const  TimeZone &get_tz()const             {return tz_local;}
   
   //Get zonned time
   static AceTime tz_convert(const AceTime& from, const TimeZone &tz);
@@ -97,7 +97,6 @@ class Rtc_ace : public Rtc_pierre{
   ace_time::acetime_t get_unix(){return get_DateTime_utc().toUnixSeconds();}
 
   //Set RTC from zoned time
-  //NOTE : RTC is always in UTC
   static AceTime             from_rtc(const Rtc_pierre::Rtc_time &t);
   static Rtc_pierre::Rtc_time to_rtc  (const AceTime &t);
 

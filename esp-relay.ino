@@ -42,44 +42,48 @@ Rtc_ace rtc;
 
 //--- NTP ---
 WiFiUDP   ntpUDP;
-NTPClient ntp(ntpUDP, "europe.pool.ntp.org", 0, 60000); //ntp.void setPoolServerName(const char* poolServerName);
 
 Relay relay(PIN_RELAY);
 State state;
 
-
-
-
+//--- filesystem ---
+#include "LittleFS.h"
 
 
 void setup () {
+
+
   relay.begin();
 
   //Serial
   Serial.begin(9600); delay(500);
   
-  //--- SPIFFS, State ---
-  if(!SPIFFS.begin()){ Serial.println("SPIFF begin error"); }
-  state.load();
+  //--- filesystem ---
+  if(!LittleFS.begin()){ 
+    Serial.println("LittleFS ERROR");  
+  }else{
+        Serial.println("LittleFS OK");  
+  }
   
-  //--- Time ---
-  rtc.begin();
-  ntp.begin();
+  state.load();
+
+
+  //=== This code should be run once, to initialise the filesystem ===
+  /*
+    state.set_wifi_ssid("xxxx");
+    state.set_wifi_pass("xxxx");
+    LittleFS.format();
+    state.make_default();
+    state.save();
+  */
+
   
 
-  //This code should be run once, to initialise the SPIF state file with correct values.
-  //AS SPIF is persistant, you should remove this code from your final build
-  #ifdef INIT_SPIFF
-    state.begin();
-    { File f = SPIFFS.open("config", "w");
-      state.save(f);
-      f.close();
-    }
-  #endif
+  //--- Time ---
+  rtc.begin();
+  
   
   //--- WIFI (depends on filesystem) ---
-  //fallback_wifi.st_addAP("Livebox-B906", "A4rgYpfYfhHSbzcc4T");
-  //fallback_wifi.ap_setAP("VMC_wifi","");
   //fallback_wifi.begin();
   fallback_wifi.st_addAP(state.get_wifi_ssid(), state.get_wifi_pass() );
   fallback_wifi.ap_setAP("VMC_wifi","");
@@ -91,52 +95,97 @@ void setup () {
   server.begin();
   Serial.println("HTTP server started");
 
-
-  
-
 }
 
 bool rtc_ok=false;
 
 
-void update_relay(){
+unsigned long run_once=0;
+unsigned long last_time=0;
 
-  //relay state 
-  if(state.is_mode_on()) {relay.switch_on();}
-  if(state.is_mode_off()){relay.switch_off();}
-  //TODO mode_auto here
-  
+void update_relay(){
+  if(state.is_mode_on()) {relay.switch_on(); return;}
+  if(state.is_mode_off()){relay.switch_off(); return;}
+  if(state.is_mode_auto() ){
+    if( rtc.lostPower() ){relay.switch_on(); Serial.println("RTC error => relay ON"); return;}
+    if(run_once>0){relay.switch_on(); Serial.println("run_once"); return;}
+    auto hh = rtc.get_DateTime_local().hour();
+    if(hh==0 ){if(state.h00==0){relay.switch_off();}else{relay.switch_on();} return; }
+    if(hh==1 ){if(state.h01==0){relay.switch_off();}else{relay.switch_on();} return; }
+    if(hh==2 ){if(state.h02==0){relay.switch_off();}else{relay.switch_on();} return; }
+    if(hh==3 ){if(state.h03==0){relay.switch_off();}else{relay.switch_on();} return; }
+    if(hh==4 ){if(state.h04==0){relay.switch_off();}else{relay.switch_on();} return; }
+    if(hh==5 ){if(state.h05==0){relay.switch_off();}else{relay.switch_on();} return; }
+    if(hh==6 ){if(state.h06==0){relay.switch_off();}else{relay.switch_on();} return; }
+    if(hh==7 ){if(state.h07==0){relay.switch_off();}else{relay.switch_on();} return; }
+    if(hh==8 ){if(state.h08==0){relay.switch_off();}else{relay.switch_on();} return; }
+    if(hh==9 ){if(state.h09==0){relay.switch_off();}else{relay.switch_on();} return; }
+    if(hh==10){if(state.h10==0){relay.switch_off();}else{relay.switch_on();} return; }
+    if(hh==11){if(state.h11==0){relay.switch_off();}else{relay.switch_on();} return; }
+    if(hh==12){if(state.h12==0){relay.switch_off();}else{relay.switch_on();} return; }
+    if(hh==13){if(state.h13==0){relay.switch_off();}else{relay.switch_on();} return; }
+    if(hh==14){if(state.h14==0){relay.switch_off();}else{relay.switch_on();} return; }
+    if(hh==15){if(state.h15==0){relay.switch_off();}else{relay.switch_on();} return; }
+    if(hh==16){if(state.h16==0){relay.switch_off();}else{relay.switch_on();} return; }
+    if(hh==17){if(state.h17==0){relay.switch_off();}else{relay.switch_on();} return; }
+    if(hh==18){if(state.h18==0){relay.switch_off();}else{relay.switch_on();} return; }
+    if(hh==19){if(state.h19==0){relay.switch_off();}else{relay.switch_on();} return; }
+    if(hh==20){if(state.h20==0){relay.switch_off();}else{relay.switch_on();} return; }
+    if(hh==21){if(state.h21==0){relay.switch_off();}else{relay.switch_on();} return; }
+    if(hh==22){if(state.h22==0){relay.switch_off();}else{relay.switch_on();} return; }
+    if(hh==23){if(state.h00==0){relay.switch_off();}else{relay.switch_on();} return; }
+
+
+    
+  }
+  //in doubt (something wrong)
+  relay.switch_on();
 }
 
-void loop () {
-  Serial.println("loop");
-  fallback_wifi.update();
-  server.handleClient();
 
-  update_relay();
-
-  if(rtc.lostPower() ){
+void update_rtc(bool force=false){
+  if(rtc.lostPower() or force ){
       Serial.print("RTC is not synched: ");
+      NTPClient ntp(ntpUDP, state.get_ntp(), 0, 60000); //ntp.void setPoolServerName(const char* poolServerName);
+      ntp.begin();
       bool ntpok = ntp.forceUpdate();
       if(ntpok){
         Serial.println("Synchronizing from NTP");
         auto ntp_epoch = ntp.getEpochTime();
         Serial.print("NTP timestamp: ");Serial.println(ntp_epoch);
         rtc.set_rtc_unix(ntp.getEpochTime());
+        Serial.print("Sychronized to "); Serial.println(to_string(rtc.get_DateTime_utc()));
       }else{
          Serial.print("NTP is not available");
       }
+  }
+}
 
+
+unsigned char frame_id=0;
+void loop () {
+  ++frame_id;
+  
+  unsigned long current_time = millis();
+  unsigned long delta = current_time - last_time;
+  last_time=current_time;
+  if(delta>=run_once){run_once=0;}else{run_once-=delta;}
+  
+
+  server.handleClient();
+  
+  update_rtc();
+  update_relay();
+
+  if(frame_id%10==0){
+    fallback_wifi.update();
+    Serial.println("loop");
+    Serial.print("rtc UTC      : "); rtc.get_DateTime_utc().printTo(SERIAL_PORT_MONITOR);  Serial.println();
+    Serial.print("rtc Local    : "); rtc.get_DateTime_local().printTo(SERIAL_PORT_MONITOR);  Serial.println();
+    Serial.println();
   }
   
-
-  
- 
-  Serial.print("rtc UTC      : "); rtc.get_DateTime_utc().printTo(SERIAL_PORT_MONITOR);  Serial.println();
-  Serial.print("rtc Local    : "); rtc.get_DateTime_local().printTo(SERIAL_PORT_MONITOR);  Serial.println();
-  Serial.println();
-  
-  delay(5000);
+  delay(500);
 
 
  
@@ -160,9 +209,17 @@ void debug_GET(){
 
 void handleRoot() {
   Serial.println("serving/");
+  debug_GET();
 
   //--- change state according to args ---
   debug_GET();
+  bool wifi_change = false;
+  bool ntp_change =false;
+  bool ntp_mode;
+  String ntp_server;
+  String clock_date;
+  String clock_time;
+  
   if(server.args()>1){
     //note : there is an argument called plain, that contains the full get query
     
@@ -177,9 +234,24 @@ void handleRoot() {
       const auto & arg_value  = server.arg(i);
       //Serial.print(arg_name); Serial.print("->"); Serial.println(arg_value);
   
-      //wifi ssid and pass  
-      if( arg_name=="wifi_ssid")                   {state.set_wifi_ssid( arg_value ); continue;}
-      if( arg_name=="wifi_pass" and arg_value!="" ){state.set_wifi_pass( arg_value ); continue;}
+      //wifi ssid and pass 
+      if( arg_name=="wifi_ssid")  {
+        Serial.println("X");
+        if(arg_value==state.get_wifi_ssid()){continue;}//no change
+        //change
+        state.set_wifi_ssid( arg_value ); 
+        wifi_change=true;
+        continue;
+      }
+      
+      if( arg_name=="wifi_pass" and arg_value!="" ){
+        if(arg_value==state.get_wifi_pass()){continue;}//no change
+        //change
+        state.set_wifi_pass( arg_value ); 
+        wifi_change=true;
+        continue;
+      }
+
   
       //program_mode 
       if( arg_name=="mode"){
@@ -195,8 +267,62 @@ void handleRoot() {
         bool b = arg_value=="on";
         state.set_hh(arg_name,b);
       }//end hours
+
+      //once
+      if( arg_name=="once"){
+        if( arg_value=="once_nochange")  {continue;}
+        if( arg_value=="once_0")  {run_once= 0;          continue;}
+        if( arg_value=="once_15m"){run_once= 15*60*1000; continue;}
+        if( arg_value=="once_30m"){run_once= 30*60*1000; continue;}
+        if( arg_value=="once_1h" ){run_once= 60*60*1000; continue;}
+        if( arg_value=="once_2h") {run_once=120*60*1000; continue;}
+      }
+
+      //clock
+      if( arg_name=="ntp_mode"){
+        if( arg_value=="ntp_nochange")  {continue;}
+        if( arg_value=="ntp_on") {ntp_change=true; ntp_mode=true; }
+        if( arg_value=="ntp_off"){ntp_change=true; ntp_mode=false; }
+      }
+      if( arg_name=="ntp_server"){ntp_server = arg_value;}
+      if( arg_name=="date")      {clock_date = arg_value;}
+      if( arg_name=="time")      {clock_time = arg_value;}
+
       
     }//end for
+
+    if(wifi_change){
+        //reconnect
+        Serial.print("RESET WIFI to "); Serial.println(state.get_wifi_ssid());
+        //WiFi.mode(WIFI_OFF);
+        fallback_wifi.mode_disconnect();
+        fallback_wifi.st_cleanAP();
+        fallback_wifi.st_addAP(state.get_wifi_ssid(),state.get_wifi_pass());    
+    }
+
+    if(ntp_change){
+      if(ntp_mode){
+        state.ntp_mode=state.NTP_ON;
+        state.set_ntp(ntp_server.c_str());
+        update_rtc(true);
+      }else{
+        state.ntp_mode=state.NTP_OFF;
+        //substring index are inclusive, exclusive
+        //date->2010-02-01
+        //time->15:16
+        //index 0123456789
+        int16_t yyyy=  int16_t(clock_date.substring(0,4).toInt()); 
+        uint8_t MM  =  uint8_t(clock_date.substring(5,7).toInt());
+        uint8_t dd  =  uint8_t(clock_date.substring(8,10).toInt());
+        uint8_t hh  =  uint8_t(clock_time.substring(0,2).toInt());
+        uint8_t mm  =  uint8_t(clock_time.substring(3,5).toInt());
+        ace_time::ZonedDateTime x=ace_time::ZonedDateTime::forComponents(yyyy,MM,dd,hh,mm,0, rtc.get_tz() );//localtime
+        if(x.isError()){Serial.print("Invalid date and time :"); Serial.print(clock_date);Serial.print(" ");Serial.println(clock_time); }
+        else           {  rtc.set_rtc(x); }
+      } 
+    }
+
+      
     
     state.save();
     update_relay();
@@ -208,9 +334,20 @@ void handleRoot() {
   String p = page();
 
   //--- mode ---
+  String once_str;
+  if(run_once==0){once_str="Non (0 secondes)";}
+  else{
+    auto s=run_once/1000;
+    auto mm = s/60;
+    auto ss = s%60;
+    once_str = "$m$ minutes et $s$ secondes";
+    once_str.replace("$m$",String(mm));
+    once_str.replace("$s$",String(ss));
+  }
+  
   p.replace("$mode$",state.str_program_mode());
   p.replace("$status_relay$",relay.is_on()?"ON":"OFF");
-  p.replace("$status_once$","???");
+  p.replace("$status_once$",once_str);
 
   String checked_mode_on   = "";
   String checked_mode_off  = "";
@@ -238,11 +375,21 @@ void handleRoot() {
   p.replace("$wifi_stationNum$",  fallback_wifi.str_stationNum());
   p.replace("$wifi_timeout$",     fallback_wifi.str_timeout());
   p.replace("$wifi_pass$",""); //dont't show password in page
-    
+
+  p.replace("$wifi_st_ssid$",state.wifi_ssid);
+
+
+  //--- ntp ---
+  p.replace("$ntp_server$",state.get_ntp());
+  p.replace("$ntp_mode$",state.str_ntp_mode());
+
+  
+
+
 
   //--- clock ---
-  p.replace("$local_time$",to_string(rtc.get_DateTime_local() ) );
-  p.replace("$utc_time$"  ,to_string(rtc.get_DateTime_utc()   ) );
+  p.replace("$local_time$",  to_string(rtc.get_DateTime_local() ) );
+  p.replace("$utc_time$"  ,  to_string(rtc.get_DateTime_utc()   ) );
   p.replace("$status_rtc$"  ,rtc.lostPower()?"ERREUR : non synchronisée":"OK");
   p.replace("$rtc_temperature$",String(rtc.get_temperature()) );
   

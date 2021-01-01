@@ -2,6 +2,8 @@
 #define STATE_HPP_pierre_
 
 #include <Arduino.h>
+#include "LittleFS.h"
+
 namespace fs{class File;}
 
 //--- persistant state ---
@@ -26,6 +28,13 @@ struct State {
     const char* get_wifi_ssid()const{return wifi_ssid;}
     const char* get_wifi_pass()const{return wifi_pass;}
 
+    //--- ntp ---
+    static constexpr unsigned char NTP_ON  = 0;
+    static constexpr unsigned char NTP_OFF = 1;
+    
+    void set_ntp(const char*);
+    const char* get_ntp()const{return ntp_server;} 
+    String str_ntp_mode()const;
 
     
     //--- program_mode ---
@@ -49,6 +58,9 @@ struct State {
     bool is_mode_on()  const{return program_mode==MODE_ON;}
     bool is_mode_off() const{return program_mode==MODE_OFF;}
     bool is_mode_auto()const{return program_mode==MODE_AUTO;}
+
+
+
     
     //--- hours ---
     bool get_hh(const String &name)const;
@@ -70,12 +82,10 @@ struct State {
     unsigned char h18 : 1; unsigned char h19 : 1; unsigned char h20 : 1;
     unsigned char h21 : 1; unsigned char h22 : 1; unsigned char h23 : 1;
     
-    unsigned char ntp_mode : 2;
+    unsigned char ntp_mode : 1;
+
     
 
-    //TODO ntp
-    //unsigned char use_ntp : 1;
-    //char ntp[254];
     
 };
 

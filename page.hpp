@@ -138,7 +138,7 @@ const String page(){
     <p><b>Connection</b><br>
     <form action="#" method="post">
     <table>
-    <tr><td><label for="wifi_ssid">SSID</label></td><td><input type="text" id="wifi_ssid" name="wifi_ssid" value="$wifi_ssid$" /></td></tr>
+    <tr><td><label for="wifi_ssid">SSID</label></td><td><input type="text" id="wifi_ssid" name="wifi_ssid" value="$wifi_st_ssid$" /></td></tr>
     <tr><td><label for="wifi_pass">Pass</label></td><td><input type="text" id="wifi_pass" name="wifi_pass" value="" /></td></tr>
     </table>
     <br>
@@ -156,7 +156,8 @@ const String page(){
     <tr><td>RTC température</td>               <td>$rtc_temperature$ °C</td></tr>
     <tr><td>Date et heure (UTC)</td>           <td>$utc_time$</td></tr>
     <tr><td>Date et heure (Europe/Paris)</td>  <td>$local_time$</td></tr>
-    <tr><td>Mode actuel</td>                   <td>$ntp_mode$</td></tr>
+    <tr><td>NTP mode actuel</td>               <td>$ntp_mode$</td></tr>
+    <tr><td>NTP serveur</td>                   <td>$ntp_server$</td></tr>
     </table>
     </p>
     

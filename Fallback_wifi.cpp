@@ -72,8 +72,8 @@ bool Fallback_wifi::mode_st(){
 	  return false;
         }
 }
-  
-  
+
+
   
 
 //=== update ===
@@ -84,7 +84,7 @@ void Fallback_wifi::update(){
 		    Serial.print("Already connected to station, ssid=");
 		    Serial.print(WiFi.SSID());
 		    Serial.print(", IP=");
-		    Serial.println(WiFi.localIP());
+		    Serial.print(WiFi.localIP());
         Serial.print(", MAC=");
         Serial.println(WiFi.macAddress());
 		    return;
