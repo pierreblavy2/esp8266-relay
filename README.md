@@ -25,10 +25,9 @@ Smart plug, with en esp8266, a DS3231 RTC, and a relay
    * Fuse Amperage should be slightly higer than 0.02A. But it's an uncommonly low value, so just put a small fuse.
    * Voltage must be >= 250V
 * A Load that should be controlled (here a VMC)
-   * The load is controlled trough the relay, that switches on/off its phase
+   * The load is controlled trough the relay, that switches on/off its live. The relay must be chosen accordingly
    * The load in NOT protected by the fuse
-   * Relay must be chosen accordingly to the load.
-   * WARNING : Here we want the load to be ON when something is wrong (ex unsynchronized RTC), if it's not the case you must patch the code.
+   * WARNING : Here we want the load to be ON when something is wrong (ex unsynchronized RTC), if it's not the case you must patch the code and move the cable from RELAY_default to RELAY_toggeled. 
 
 
 
