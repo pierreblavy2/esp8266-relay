@@ -44,6 +44,7 @@ Smart plug, with en esp8266, a DS3231 RTC, and a relay
 * LIVE to RELAY_COMM
 * RELAY_default to LOAD_LIVE
 * RELAY_toggeled is not connected
+* NEUTRAL to LOAD_NEUTRAL
 
 ## 220V to 5V
 * LIVE    to FUSE_1
