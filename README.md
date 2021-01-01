@@ -1,5 +1,10 @@
-# esp8266-relay
-Smart plug, with en esp8266, a DS3231 RTC, and a relay
+# Project overview
+Create a smart "plug", that can be controlled configured and programmed using the wifi. The plus can be connected to an existing wifi, or create its own standalone network as a backup when no connection is available.
+
+The plug is equiped with a RTC, that can be synchronized trough NTP automatically when internet is available, or manually.
+
+This current version controls an air extractor (VMC), and has a default behabiour of switching ON when things get worng. If it's not what you expect, you must edit the code accordingly.
+
 
 # Hardware
 * D1mini : Wemos mini D1, with esp8266
