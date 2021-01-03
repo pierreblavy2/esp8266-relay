@@ -62,5 +62,10 @@ https://www.gnu.org/licenses/gpl-3.0.txt
 * NEUTRAL to 220to5_convertor_AC2
 
 
+# Screenshots
+![screen1](https://github.com/pierreblavy2/esp8266-relay/blob/main/screenshots/screen1.jpg?raw=true)
+![screen2](https://github.com/pierreblavy2/esp8266-relay/blob/main/screenshots/screen2.jpg?raw=true)
+![screen3](https://github.com/pierreblavy2/esp8266-relay/blob/main/screenshots/screen3.jpg?raw=true)
+![screen4](https://github.com/pierreblavy2/esp8266-relay/blob/main/screenshots/screen4.jpg?raw=true)
 
 
