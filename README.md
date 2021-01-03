@@ -54,6 +54,7 @@ https://www.gnu.org/licenses/gpl-3.0.txt
 * RELAY_default to LOAD_LIVE
 * RELAY_toggeled is not connected
 * NEUTRAL to LOAD_NEUTRAL
+* GROUNG wire is kept untouched and goes directly to the load
 
 ## 220V to 5V
 * LIVE    to FUSE_1
