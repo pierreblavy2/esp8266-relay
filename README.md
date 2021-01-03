@@ -40,6 +40,8 @@ https://www.gnu.org/licenses/gpl-3.0.txt
 
 
 # Wires
+![wires](https://github.com/pierreblavy2/esp8266-relay/blob/main/wires.png?raw=true)
+
 ## LOW POWER
 * from D1mini_D1 to RTC_SCL  (I2C)
 * from D1mini_D2 to RTC_SDA, (I2C)
