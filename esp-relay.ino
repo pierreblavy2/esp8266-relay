@@ -70,10 +70,11 @@ void setup () {
 
   //=== This code should be run once, to initialise the filesystem ===
   /*
-    state.set_wifi_ssid("xxxx");
-    state.set_wifi_pass("xxxx");
+
     LittleFS.format();
     state.make_default();
+    state.set_wifi_ssid("xxxx");
+    state.set_wifi_pass("xxxx");
     state.save();
   */
 
