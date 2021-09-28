@@ -5,8 +5,10 @@ The plug is equiped with a RTC, that can be synchronized trough NTP automaticall
 
 This current version controls an air extractor (VMC), and has a default behabiour of switching ON when things get worng. If it's not what you expect, you must edit the code accordingly.
 
-The code is published under the GPL-3.0 license
-https://www.gnu.org/licenses/gpl-3.0.txt
+# License
+* Since 2021-28-09, the code is published under the [LGPL-3.0](https://www.gnu.org/licenses/lgpl-3.0.txt) license
+* The code was previously licensed under GPL-3.0, this license is technically still valid, but as LGPL is less restrictive, please use it.
+
 
 
 # Hardware
