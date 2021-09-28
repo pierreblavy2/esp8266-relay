@@ -24,7 +24,7 @@ struct State {
     void set_wifi_ssid(const char*);
     void set_wifi_pass(const char*); 
     void set_wifi_ssid(const String&s){set_wifi_ssid(s.c_str());}
-    void set_wifi_pass(const String&s){set_wifi_ssid(s.c_str());}
+    void set_wifi_pass(const String&s){set_wifi_pass(s.c_str());}
     const char* get_wifi_ssid()const{return wifi_ssid;}
     const char* get_wifi_pass()const{return wifi_pass;}
 
