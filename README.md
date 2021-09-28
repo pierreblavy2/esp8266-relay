@@ -11,11 +11,22 @@ This current version controls an air extractor (VMC), and has a default behabiou
 
 # Dependancies
 * WARNING : the license are the one that were valid when this documentation was written, check the source project to be sur that they are still valid
-* AceTime (MIT License) : https://www.arduino.cc/reference/en/libraries/acetime/
-* ESP8266WiFiMulti and ESP8266WiFi (LGPL-2.1 License)
-    * doc: https://arduino-esp8266.readthedocs.io/en/latest/index.html
+* AceTime (MIT License) :
+    * doc and code : https://github.com/bxparks/AceTime
+    * doc: https://www.arduino.cc/reference/en/libraries/acetime/
+* Arduino-esp8266 : concerns ESP8266WiFiMulti, ESP8266WiFi, ESP8266WebServer and LittleFS (LGPL-2.1 License)
     * code : https://github.com/esp8266/Arduino
-    
+    * doc : https://arduino-esp8266.readthedocs.io/en/latest/index.html
+    * doc LittleFS : https://arduino-esp8266.readthedocs.io/en/latest/filesystem.html
+* RTCLib (MIT License)
+    * code : https://github.com/adafruit/RTClib
+* Wire (code in public domain)
+    * doc : https://www.arduino.cc/en/reference/wire
+* Arduino (LGPL 2.1)
+    * code : https://github.com/arduino/ArduinoCore-avr/blob/master/cores/arduino/Arduino.h
+
+
+
 # Hardware
 * D1mini : Wemos mini D1, with esp8266
 * RELAY (here : RelayShield for Wemos D1)
