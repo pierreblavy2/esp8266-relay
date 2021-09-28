@@ -9,8 +9,13 @@ This current version controls an air extractor (VMC), and has a default behabiou
 * Since 2021-28-09, the code is published under the [LGPL-3.0](https://www.gnu.org/licenses/lgpl-3.0.txt) license
 * The code was previously licensed under GPL-3.0, this license is technically still valid, but as LGPL is less restrictive, please use it.
 
-
-
+# Dependancies
+* WARNING : the license are the one that were valid when this documentation was written, check the source project to be sur that they are still valid
+* AceTime (MIT License) : https://www.arduino.cc/reference/en/libraries/acetime/
+* ESP8266WiFiMulti and ESP8266WiFi (LGPL-2.1 License)
+    * doc: https://arduino-esp8266.readthedocs.io/en/latest/index.html
+    * code : https://github.com/esp8266/Arduino
+    
 # Hardware
 * D1mini : Wemos mini D1, with esp8266
 * RELAY (here : RelayShield for Wemos D1)
