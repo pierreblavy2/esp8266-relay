@@ -1,3 +1,6 @@
+# DRAFT!
+This project is not yet finished
+
 # Project overview
 Create a smart "plug", that can be controlled configured and programmed using the wifi. The plus can be connected to an existing wifi, or create its own standalone network as a backup when no connection is available.
 
